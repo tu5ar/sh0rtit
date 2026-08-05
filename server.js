@@ -1,19 +1,14 @@
 const { createClient } = require("@supabase/supabase-js");
 const express = require("express");
 const crypto = require("crypto");
-const vhost = require("vhost");
-
 const supabaseURL = "https://fgzrvuqqusxvmszfxbrq.supabase.co";
-const supabaseKey = "sb_publishable_zN7LIQuGisQvooBKMas2Zg_HizlMvDu";
+const supabaseKey = "#";
 const supabase = createClient(supabaseURL, supabaseKey);
 
-const sh0rtitApp = express();
-const domain = "tu5ar.dev";
+const app = express()
+app.use(express.json());
 
-const mainApp = express()
-
-mainApp.use(express.json());
-mainApp.use(express.static("public"));
+app.use(express.static("public"));
 
 async function addRecord(longURL, shortURL) {
   const { data, error } = await supabase
@@ -48,7 +43,7 @@ function shortHash(longURL) {
     .slice(0, 6);
 }
 
-mainApp.post("/api/new/", (req, res) => {
+app.post("/api/new/", (req, res) => {
   //const longURL = req.params.id;
   const longURL = req.body.original_link;
   const shortURL = shortHash(longURL);
@@ -56,14 +51,12 @@ mainApp.post("/api/new/", (req, res) => {
   res.send(shortURL);
 })
 
-sh0rtitApp.get("/:id", async (req, res) => {
+app.get("/api/:id", async (req, res) => {
   const shortURL = req.params.id;
   const data = await getRecord(shortURL);
   res.redirect(302, data["original_link"]);
 })
 
-mainApp.use(vhost("sh0rtit.${domain}", sh0rtitApp));
-
-mainApp.listen(3000, () => {
+app.listen(3000, () => {
   console.log("server running")
 })
