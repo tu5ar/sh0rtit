@@ -2,7 +2,7 @@
   "name": "sh0rtit",
   "version": "1.0.0",
   "description": "Simple link shortner",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +13,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
     "crypto": "^1.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "vercel": "^58.5.1"
   }
 }
