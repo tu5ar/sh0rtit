@@ -14,7 +14,7 @@ async function requestToServer() {
   const newShortLink = await response.text();
   const heading = document.getElementById("newLink");
   const domain = window.location.hostname;
-  heading.textContent = domain + "/" + newShortLink;
+  heading.textContent = domain + "/api/" + newShortLink;
 
 }
 
