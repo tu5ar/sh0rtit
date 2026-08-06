@@ -1,5 +1,5 @@
 async function requestToServer() {
-  const originalLink = document.getElementById("userInput");
+  const originalLink = document.getElementById("userInput").value;
   const endPoint = "/api/new";
   const payload = {
     original_link: originalLink
@@ -7,12 +7,14 @@ async function requestToServer() {
   const response = await fetch(endPoint, {
     method: "POST",
     headers: {
-      "Content-Type": "applications/json"
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(payload)
   });
-  const data = await response.json();
-  console.log(data);
+  const newShortLink = await response.text();
+  const heading = document.getElementById("newLink");
+  const domain = window.location.hostname;
+  heading.textContent = domain + "/" + newShortLink;
 
 }
 

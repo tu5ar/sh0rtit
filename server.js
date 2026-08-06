@@ -6,7 +6,7 @@ const supabaseKey = "sb_publishable_zN7LIQuGisQvooBKMas2Zg_HizlMvDu";
 const supabase = createClient(supabaseURL, supabaseKey);
 const path = require("path");
 
-const app = express()
+const app = express();
 app.use(express.json());
 
 app.use(express.static("public"));
@@ -20,6 +20,8 @@ async function addRecord(longURL, shortURL) {
   if (error) {
     console.log("ERROR: ", error);
     return;
+  } else {
+    return 1;
   }
 }
 
@@ -45,14 +47,13 @@ function shortHash(longURL) {
 }
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.post("/api/new/", (req, res) => {
-  //const longURL = req.params.id;
+app.post("/api/new/", async (req, res) => {
   const longURL = req.body.original_link;
   const shortURL = shortHash(longURL);
-  addRecord(longURL, shortURL);
+  const status = await addRecord(longURL, shortURL);
   res.send(shortURL);
 })
 
