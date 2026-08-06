@@ -2,8 +2,9 @@ const { createClient } = require("@supabase/supabase-js");
 const express = require("express");
 const crypto = require("crypto");
 const supabaseURL = "https://fgzrvuqqusxvmszfxbrq.supabase.co";
-const supabaseKey = "#";
+const supabaseKey = "sb_publishable_zN7LIQuGisQvooBKMas2Zg_HizlMvDu";
 const supabase = createClient(supabaseURL, supabaseKey);
+const path = require("path");
 
 const app = express()
 app.use(express.json());
@@ -42,6 +43,10 @@ function shortHash(longURL) {
     .digest("hex")
     .slice(0, 6);
 }
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 app.post("/api/new/", (req, res) => {
   //const longURL = req.params.id;
