@@ -15,5 +15,8 @@
     "crypto": "^1.0.1",
     "express": "^5.2.1",
     "vercel": "^58.5.1"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
   }
 }
