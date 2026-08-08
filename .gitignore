@@ -2,3 +2,5 @@
 **/.DS_Store
 
 .vercel
+dist/
+node_moules/
