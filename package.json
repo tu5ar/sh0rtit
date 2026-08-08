@@ -2,18 +2,24 @@
   "name": "sh0rtit",
   "version": "1.0.0",
   "description": "Simple link shortner",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc && mkdir -p public/dist && cp dist/client.js public/dist/client.js",
+    "start": "node dist/server.js",
+    "dev": "npm run build && npm start"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
+    "@types/express": "^5.0.6",
     "crypto": "^1.0.1",
-    "express": "^5.2.1",
-    "vercel": "^58.5.1"
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "typescript": "^6.0.3"
   }
 }
