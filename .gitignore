@@ -3,4 +3,4 @@
 
 .vercel
 dist/
-node_moules/
+node_modules/
