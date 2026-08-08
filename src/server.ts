@@ -1,6 +1,7 @@
 import { shortHash } from "./utils.js";
 import { addRecord } from "./dao.js";
 import { getLongLink } from "./dao.js";
+import { validateInput } from "./utils.js";
 import express, { type Request, type Response } from "express";
 import path from "path"
 import { fileURLToPath } from "url";
@@ -19,9 +20,14 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/api/new/", async (req: Request, res: Response) => {
     const longLink = req.body.original_link;
-    const shortLink = shortHash(longLink);
-    await addRecord(longLink, shortLink);
-    res.send(shortLink);
+    const parsedLink = validateInput(longLink);
+    if (!parsedLink) {
+        res.status(204).send();
+    } else {
+        const shortLink = shortHash(parsedLink);
+        await addRecord(parsedLink, shortLink);
+        res.send(shortLink);
+    }
 })
 
 app.get("/api/:id", async (req: Request, res: Response) => {
