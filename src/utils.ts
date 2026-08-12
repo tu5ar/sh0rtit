@@ -19,8 +19,6 @@ function normaliseInput(input: string): string | void {
     if (input.includes(":") && !input.startsWith(HTTP_PROTOCOL) && !input.startsWith(HTTPS_PROTOCOL)) {
         return;
     }
-
-    input = input.toLowerCase();
     if (input.startsWith(HTTP_PROTOCOL) || input.startsWith(HTTPS_PROTOCOL)) {
         return input;
     }

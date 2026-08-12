@@ -11,7 +11,7 @@ async function askServer(): Promise<string | undefined> {
         return;
     }
     try {
-        const serverResponse = await fetch(END_POINT, payload)
+        const serverResponse = await fetch(END_POINT, payload);
         const newLink = await serverResponse.text();
         if (newLink) {
             showShortLink(newLink);
@@ -25,7 +25,12 @@ function showShortLink(link: string): void {
     const newLinkHeader = document.getElementById("new-link");
     const webDomain = window.location.hostname;
     if (newLinkHeader) {
-        newLinkHeader.textContent = "Short link: " + webDomain + "/api/" + link;
+        if (webDomain == "localhost") {
+            newLinkHeader.textContent = "Short link: " + webDomain + ":3000" + "/api/" + link;
+        } else {
+            newLinkHeader.textContent = "Short link: " + webDomain + "/api/" + link;
+        }
+
     }
 }
 

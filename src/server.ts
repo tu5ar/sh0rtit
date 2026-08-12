@@ -1,10 +1,7 @@
-import { shortHash } from "./utils.js";
-import { addRecord } from "./dao.js";
-import { getLongLink } from "./dao.js";
-import { validateInput } from "./utils.js";
 import express, { type Request, type Response } from "express";
-import path from "path"
+import path from "path";
 import { fileURLToPath } from "url";
+import { handleNewRequest, handleRedirects, handleSignin, handleSuccessfulOauth, throwError } from "./server_handlers.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,33 +12,26 @@ const app = express();
 app.use(express.json()).use(express.static(publicDir));
 
 app.get("/", (req: Request, res: Response) => {
-    res.sendFile(path.join(publicDir, "index.html"));
+    res.sendFile(path.join(publicDir, "login", "login-page.html"));
+});
+
+app.get("/oauth2/", (req: Request, res: Response) => {
+    handleSignin(res);
+})
+
+app.get("/oauth2/success/", async (req: Request, res: Response) => {
+    const responseCode = req.query.code as string;
+    handleSuccessfulOauth(responseCode, res);
 });
 
 app.post("/api/new/", async (req: Request, res: Response) => {
     const longLink = req.body.original_link;
-    const parsedLink = validateInput(longLink);
-    if (!parsedLink) {
-        res.status(204).send();
-    } else {
-        const shortLink = shortHash(parsedLink);
-        await addRecord(parsedLink, shortLink);
-        res.send(shortLink);
-    }
+    handleNewRequest(longLink, res);
 })
 
 app.get("/api/:id", async (req: Request, res: Response) => {
-    const shortLink = req.params.id;
-    if (typeof shortLink !== "string") {
-        throwError(res);
-        return;
-    }
-    const longLink = await getLongLink(shortLink);
-    if (typeof longLink !== "string") {
-        throwError(res);
-        return;
-    }
-    res.redirect(302, longLink);
+    const shortLink = req.params.id as string;
+    handleRedirects(shortLink, res);
 })
 
 app.all(/(.*)/, (req: Request, res: Response) => {
@@ -49,9 +39,6 @@ app.all(/(.*)/, (req: Request, res: Response) => {
 })
 
 app.listen(3000, () => {
-    console.log("Server Running")
+    console.log("Server Running");
 })
 
-function throwError(res: Response): void {
-    res.status(404).sendFile(path.join(publicDir, "error.html"));
-}

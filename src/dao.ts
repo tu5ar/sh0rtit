@@ -46,3 +46,18 @@ export async function getLongLink(shortLink: string): Promise<string | number | 
         return -1;
     }
 }
+
+export async function addUser(userId: number): Promise<number> {
+    try {
+        await supabase
+            .from("users")
+            .upsert({
+                userid: userId
+            }
+            );
+        return 0;
+    } catch (error) {
+        console.log(INSERT_ERROR_MSG, error);
+        return -1;
+    }
+}
