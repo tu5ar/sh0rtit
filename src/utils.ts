@@ -1,10 +1,14 @@
-import { createHash } from "crypto";
-
-export function shortHash(longLink: string): string {
-    return createHash("sha256")
-        .update(longLink)
-        .digest("hex")
-        .slice(0, 6);
+export function FNV_1A(input: string): string {
+    const FNV_OFFSET_BASIS = 2166136261;
+    const FNV_PRIME = 16777619;
+    let hash = FNV_OFFSET_BASIS;
+    const bytes = new TextEncoder().encode(input);
+    for (const uint8 of bytes) {
+        hash = (hash ^ uint8) >>> 0;
+        hash = Math.imul(hash, FNV_PRIME) >>> 0;
+    }
+    //normalises return to length 7 w/ padding and splices last 5 chars
+    return hash.toString(36).padStart(7, "0",).slice(-5);
 }
 
 function normaliseInput(input: string): string | void {

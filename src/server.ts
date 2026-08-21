@@ -1,27 +1,19 @@
 import express, { type Request, type Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { handleNewRequest, handleRedirects, handleSignin, handleSuccessfulOauth, throwError } from "./server_handlers.js";
+import { handleNewRequest, handleRedirects, throwError } from "./server_handlers.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 const publicDir = path.join(projectRoot, "public");
+const SERVER_PORT = 3000;
 
 const app = express();
 app.use(express.json()).use(express.static(publicDir));
 
 app.get("/", (req: Request, res: Response) => {
-    res.sendFile(path.join(publicDir, "login", "login-page.html"));
-});
-
-app.get("/oauth2/", (req: Request, res: Response) => {
-    handleSignin(res);
-})
-
-app.get("/oauth2/success/", async (req: Request, res: Response) => {
-    const responseCode = req.query.code as string;
-    handleSuccessfulOauth(responseCode, res);
+    res.sendFile(path.join(publicDir, "index", "index.html"));
 });
 
 app.post("/api/new/", async (req: Request, res: Response) => {
@@ -38,7 +30,7 @@ app.all(/(.*)/, (req: Request, res: Response) => {
     throwError(res);
 })
 
-app.listen(3000, () => {
+app.listen(SERVER_PORT, () => {
     console.log("Server Running");
 })
 

@@ -25,6 +25,7 @@ export async function addRecord(longLink: string, shortLink: string): Promise<nu
         console.log(INSERT_ERROR_MSG, error);
         return -1;
     }
+   return 0;
 }
 
 //get long link
@@ -43,21 +44,6 @@ export async function getLongLink(shortLink: string): Promise<string | number | 
 
     } catch (error) {
         console.log(GET_ERROR_MSG, error);
-        return -1;
-    }
-}
-
-export async function addUser(userId: number): Promise<number> {
-    try {
-        await supabase
-            .from("users")
-            .upsert({
-                userid: userId
-            }
-            );
-        return 0;
-    } catch (error) {
-        console.log(INSERT_ERROR_MSG, error);
         return -1;
     }
 }

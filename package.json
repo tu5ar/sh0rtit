@@ -4,7 +4,7 @@
   "description": "Simple link shortner",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc && mkdir -p public/dist && cp dist/client.js public/dist/client.js && cp dist/login.js public/dist/login.js",
+    "build": "tsc && mkdir -p public/dist && cp dist/client.js public/dist/client.js",
     "start": "node dist/server.js",
     "dev": "npm run build && npm start"
   },
@@ -19,7 +19,8 @@
     "crypto": "^1.0.1",
     "express": "^5.2.1",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "typescript-cookie": "^1.0.6"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
