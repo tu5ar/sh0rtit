@@ -15,11 +15,10 @@ export async function addRecord(longLink: string, shortLink: string, sessionID: 
                 long_link: longLink,
                 short_link: shortLink,
                 session_id: sessionID
-            },
-                {
-                    onConflict: "long_link",
-                    ignoreDuplicates: true
-                }
+            }, 
+            {
+                onConflict: "long_link, session_id", ignoreDuplicates: true
+            }
             );
         return 0;
     } catch (error) {

@@ -24,8 +24,7 @@ export async function handleNewRequest(longLink: string, sessionID: string | und
         if (!sessionID) {
             sessionID = initCookie(res);
         }
-        //await addRecord(parsedLink, shortLink, sessionID);
-        console.log(sessionID);
+        await addRecord(parsedLink, shortLink, sessionID);
         res.send(shortLink);
     }
 }
