@@ -1,7 +1,7 @@
+import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
-const supabaseURL = "https://fgzrvuqqusxvmszfxbrq.supabase.co";
-const supabaseKey = "sb_publishable_zN7LIQuGisQvooBKMas2Zg_HizlMvDu";
-const supabase = createClient(supabaseURL, supabaseKey);
+
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
 const INSERT_ERROR_MSG = "Supabase - Insert Error";
 const GET_ERROR_MSG = "Supabase - Get Error";
