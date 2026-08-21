@@ -14,13 +14,18 @@ export function handleSignin(res: Response) {
     res.sendFile(path.join(publicDir, "index", "index.html"));
 }
 
-export async function handleNewRequest(longLink: string, res: Response) {
+export async function handleNewRequest(longLink: string, sessionID: string | undefined, res: Response) {
     const parsedLink = validateInput(longLink);
     if (!parsedLink) {
         res.status(204).send();
     } else {
+        //valid url
         const shortLink = FNV_1A(parsedLink);
-        await addRecord(parsedLink, shortLink);
+        if (!sessionID) {
+            sessionID = initCookie(res);
+        }
+        //await addRecord(parsedLink, shortLink, sessionID);
+        console.log(sessionID);
         res.send(shortLink);
     }
 }
@@ -35,4 +40,17 @@ export async function handleRedirects(shortLink: string, res: Response) {
 }
 export function throwError(res: Response): void {
     res.status(404).sendFile(path.join(errorDir, "error.html"));
+}
+
+function initCookie(res: Response): string {
+    const cookieValidityDays = 30;
+    const maxAge = cookieValidityDays * 24 * 60 * 60 * 1000;
+    const sessionID = crypto.randomUUID();
+    res.cookie("session_id", sessionID, {
+        maxAge, 
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax"
+    });
+    return sessionID;
 }

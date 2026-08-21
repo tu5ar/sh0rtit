@@ -7,13 +7,14 @@ const INSERT_ERROR_MSG = "Supabase - Insert Error";
 const GET_ERROR_MSG = "Supabase - Get Error";
 
 //add record
-export async function addRecord(longLink: string, shortLink: string): Promise<number> {
+export async function addRecord(longLink: string, shortLink: string, sessionID: String): Promise<number> {
     try {
         await supabase
             .from("main")
             .upsert({
                 long_link: longLink,
-                short_link: shortLink
+                short_link: shortLink,
+                session_id: sessionID
             },
                 {
                     onConflict: "long_link",
@@ -25,7 +26,6 @@ export async function addRecord(longLink: string, shortLink: string): Promise<nu
         console.log(INSERT_ERROR_MSG, error);
         return -1;
     }
-   return 0;
 }
 
 //get long link

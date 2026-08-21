@@ -1,5 +1,6 @@
 import express, { type Request, type Response } from "express";
 import path from "path";
+import cookieParser from 'cookie-parser';
 import { fileURLToPath } from "url";
 import { handleNewRequest, handleRedirects, throwError } from "./server_handlers.js";
 
@@ -10,7 +11,7 @@ const publicDir = path.join(projectRoot, "public");
 const SERVER_PORT = 3000;
 
 const app = express();
-app.use(express.json()).use(express.static(publicDir));
+app.use(express.json()).use(express.static(publicDir)).use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
     res.sendFile(path.join(publicDir, "index", "index.html"));
@@ -18,7 +19,8 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/api/new/", async (req: Request, res: Response) => {
     const longLink = req.body.original_link;
-    handleNewRequest(longLink, res);
+    const sessionID = req.cookies.session_id;
+    handleNewRequest(longLink, sessionID, res);
 })
 
 app.get("/api/:id", async (req: Request, res: Response) => {

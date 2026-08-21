@@ -1,13 +1,3 @@
-//add event lister to button
-import { getCookie, setCookie } from "typescript-cookie";
-
-//setting up UUID 
-let sessionID: string | undefined = getCookie("session_id");
-if (!sessionID) {
-    sessionID = crypto.randomUUID();
-    setCookie("session_id", sessionID, {expires: 30, path: "/"});
-}
-
 const shortButton = document.getElementById("short-button");
 if (shortButton) {
     shortButton.addEventListener("click", askServer);
@@ -62,8 +52,7 @@ function getPayload(): RequestInit | null {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            original_link: input,
-            session_id: sessionID
+            original_link: input
         })
     };
 }
