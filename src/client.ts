@@ -1,4 +1,3 @@
-//add event lister to button
 const shortButton = document.getElementById("short-button");
 if (shortButton) {
     shortButton.addEventListener("click", askServer);
