@@ -2,6 +2,8 @@
 
 <head>
   <title>sh0rtit</title>
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../css/style.css">
   <script type="importmap">
   {
     "imports": {
@@ -13,13 +15,17 @@
 </head>
 
 <body>
-  <h1>Shorter</h1>
-  <input type="text" id="user-input">
-  <button id="short-button">Short it</button>
-  <h3 id="new-link">Short link: </h3>
-  <div class="links-container">
-    <h4>Your Links:</h4>
-    <ul id="user-links"></ul>
+  <div class="card">
+    <h1>sh0rtit</h1>
+    <h3>Paste a link, get a short one back.</h3>
+    <div class="input-row">
+      <input type="text" id="user-input" placeholder="http://www.verylonglink.com/">
+      <button id="short-button">Short it</button>
+    </div>
+    <div class="links-container">
+      <h4>Your Links</h4>
+      <ul id="user-links"></ul>
+    </div>
   </div>
 </body>
 

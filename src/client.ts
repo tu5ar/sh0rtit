@@ -47,12 +47,12 @@ function addLinkToDisplay(short_link: string, long_link: string): void {
     const isLocalHost = webDomain === "localhost" ? true : false;
     if (linksList) {
         const li = document.createElement("li");
-        let shortLinkBuilder = `https://${webDomain}`;
+        let shortLinkBuilder = `http://${webDomain}`;
         if (isLocalHost) {
             shortLinkBuilder += ":3000";
         }
         shortLinkBuilder += `/api/${short_link}`;
-        li.textContent = `Long link: ${long_link}, Short link: ${shortLinkBuilder}`;
+        li.innerHTML = `Long link: ${long_link}<br>Short link: ${shortLinkBuilder}`;
         const copyBtn = document.createElement("button")
         copyBtn.textContent = "Copy";
         copyBtn.addEventListener("click", () => {
