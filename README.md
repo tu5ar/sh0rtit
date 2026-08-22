@@ -4,6 +4,7 @@ A simple link shortener. Paste a long URL, get a short code back, and pull up yo
 <p align="center">
    <img width="500" src="webpage.png" />
 </p>
+<p align="center">Check it out here! -> www.sh0rtit.xyz</p>
 
 ## Stack
 
