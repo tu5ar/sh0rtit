@@ -1,9 +1,17 @@
 import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 
+//Supabase Configs
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 const INSERT_ERROR_MSG = "Supabase - Insert Error";
 const GET_ERROR_MSG = "Supabase - Get Error";
+
+//DB Column Names
+const COL_LONG_LINK = "long_link";
+const COL_SHORT_LINK = "short_link";
+const COL_SESSION_ID = "session_id";
+const COL_CREATED_AT = "created_at";
+const TABLE_MAIN = "main";
 
 interface SessionLinks {
     long_link: string;
@@ -11,17 +19,17 @@ interface SessionLinks {
 }
 
 //add record
-export async function addRecord(longLink: string, shortLink: string, sessionID: String): Promise<number> {
+export async function addRecord(longLink: string, shortLink: string, sessionID: string): Promise<number> {
     try {
         await supabase
-            .from("main")
+            .from(TABLE_MAIN)
             .upsert({
-                long_link: longLink,
-                short_link: shortLink,
-                session_id: sessionID
+                [COL_LONG_LINK]: longLink,
+                [COL_SHORT_LINK]: shortLink,
+                [COL_SESSION_ID]: sessionID
             },
                 {
-                    onConflict: "long_link, session_id", ignoreDuplicates: true
+                    onConflict: `${COL_LONG_LINK},${COL_SESSION_ID}`, ignoreDuplicates: true
                 }
             );
         return 0;
@@ -35,15 +43,15 @@ export async function addRecord(longLink: string, shortLink: string, sessionID: 
 export async function getLongLink(shortLink: string): Promise<string | number | null> {
     try {
         const { data, error } = await supabase
-            .from("main")
-            .select("long_link")
-            .eq("short_link", shortLink)
+            .from(TABLE_MAIN)
+            .select(COL_LONG_LINK)
+            .eq(COL_SHORT_LINK, shortLink)
             .maybeSingle();
 
         if (error) {
             throw error;
         }
-        return data ? data.long_link : null; //can be str or null
+        return data ? data.long_link : null;
 
     } catch (error) {
         console.log(GET_ERROR_MSG, error);
@@ -51,13 +59,14 @@ export async function getLongLink(shortLink: string): Promise<string | number | 
     }
 }
 
-export async function initLinkPull(sessionID: string): Promise<SessionLinks[]> {
+//link pull on initial load
+export async function initLinkPull(sessionID: string): Promise<SessionLinks[] | null> {
     try {
         const { data, error } = await supabase
-            .from("main")
-            .select("short_link, long_link")
-            .eq("session_id", sessionID)
-            .order("created_at", {
+            .from(TABLE_MAIN)
+            .select(`${COL_SHORT_LINK},${COL_LONG_LINK}`)
+            .eq(COL_SESSION_ID, sessionID)
+            .order(COL_CREATED_AT, {
                 ascending: false
             })
             .limit(10);
@@ -69,6 +78,6 @@ export async function initLinkPull(sessionID: string): Promise<SessionLinks[]> {
 
     } catch (error) {
         console.log(GET_ERROR_MSG, error);
-        return [];
+        return null;
     }
 }

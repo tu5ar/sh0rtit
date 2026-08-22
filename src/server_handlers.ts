@@ -10,10 +10,10 @@ const projectRoot = path.resolve(__dirname, "..");
 const errorDir = path.join(projectRoot, "public", "error");
 const publicDir = path.join(projectRoot, "public");
 
-export function handleSignin(res: Response) {
-    res.sendFile(path.join(publicDir, "index", "index.html"));
-}
+const COL_SESSION_ID = "session_id";
+const ERROR_FILE = "error.html";
 
+//create new short link and update the DB and refresh page to update it
 export async function handleNewRequest(longLink: string, sessionID: string | undefined, res: Response): Promise<void> {
     const parsedLink = validateInput(longLink);
     if (!parsedLink) {
@@ -38,14 +38,15 @@ export async function handleRedirects(shortLink: string, res: Response): Promise
     res.redirect(302, longLink);
 }
 export function throwError(res: Response): void {
-    res.status(404).sendFile(path.join(errorDir, "error.html"));
+    res.status(404).sendFile(path.join(errorDir, ERROR_FILE));
 }
 
+//set cookie on first run
 function initCookie(res: Response): string {
     const cookieValidityDays = 30;
     const maxAge = cookieValidityDays * 24 * 60 * 60 * 1000;
     const sessionID = crypto.randomUUID();
-    res.cookie("session_id", sessionID, {
+    res.cookie(COL_SESSION_ID, sessionID, {
         maxAge,
         httpOnly: true,
         secure: true,
@@ -54,10 +55,12 @@ function initCookie(res: Response): string {
     return sessionID;
 }
 
+//session-based link pull
 export async function handleInitPull(sessionID: string, res: Response): Promise<void> {
-    const data = await initLinkPull(sessionID) || [];
+    const data = await initLinkPull(sessionID);
     if (!data) {
         res.status(401).end();
+        return;
     }
     res.send(data);
 }

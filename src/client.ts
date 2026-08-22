@@ -30,19 +30,6 @@ async function askServer(): Promise<string | undefined> {
     }
 }
 
-function showShortLink(link: string): void {
-    const newLinkHeader = document.getElementById("new-link");
-    const webDomain = window.location.hostname;
-    if (newLinkHeader) {
-        if (webDomain == "localhost") {
-            newLinkHeader.textContent = "Short link: " + webDomain + ":3000" + "/api/" + link;
-        } else {
-            newLinkHeader.textContent = "Short link: " + webDomain + "/api/" + link;
-        }
-
-    }
-}
-
 async function getAllLinks(): Promise<void> {
     const END_POINT = "/init/";
     const response = await fetch(END_POINT);
@@ -60,7 +47,7 @@ function addLinkToDisplay(short_link: string, long_link: string): void {
     const isLocalHost = webDomain === "localhost" ? true : false;
     if (linksList) {
         const li = document.createElement("li");
-        let shortLinkBuilder = `${webDomain}`;
+        let shortLinkBuilder = `https://${webDomain}`;
         if (isLocalHost) {
             shortLinkBuilder += ":3000";
         }
@@ -80,7 +67,6 @@ function addLinkToDisplay(short_link: string, long_link: string): void {
         });
         linksList.appendChild(li);
         linksList.appendChild(copyBtn);
-        linksList.appendChild(li)
     }
 }
 
