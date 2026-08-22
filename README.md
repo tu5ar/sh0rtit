@@ -1,8 +1,9 @@
 # sh0rtit
 
 A simple link shortener. Paste a long URL, get a short code back, and pull up your recent links again on return visits (tracked via a session cookie) — no account needed.
-
-<img width="200" src="webpage.png" />
+<p align="center">
+   <img width="500" src="webpage.png" />
+</p>
 
 ## Stack
 
