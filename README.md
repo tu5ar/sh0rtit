@@ -29,7 +29,7 @@ A simple link shortener. Paste a long URL, get a short code back, and pull up yo
    ```
    npm run dev
    ```
-   Serves on `http://localhost:3000`.
+   Serves locally on `http://localhost:3000`.
 
 ## Scripts
 
