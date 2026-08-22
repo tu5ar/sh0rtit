@@ -10,8 +10,8 @@ const projectRoot = path.resolve(__dirname, "..");
 const publicDir = path.join(projectRoot, "public");
 const SERVER_PORT = 3000;
 const INDEX_FILE = "index.html";
-const NEW_REQUEST_ENDPOINT = "/api/new/";
-const REDIRECT_ENDPOINT = "/api/:id";
+const NEW_REQUEST_ENDPOINT = "/new/";
+const REDIRECT_ENDPOINT = "/:id";
 const INIT_ENDPOINT = "/init/";
 
 const app = express();
@@ -25,6 +25,11 @@ app.post(NEW_REQUEST_ENDPOINT, async (req: Request, res: Response) => {
     const longLink = req.body.original_link;
     const sessionID = req.cookies.session_id;
     handleNewRequest(longLink, sessionID, res);
+})
+
+app.get(INIT_ENDPOINT, async (req: Request, res: Response) => {
+    const sessionID = req.cookies.session_id;
+    handleInitPull(sessionID, res);
 })
 
 app.get(REDIRECT_ENDPOINT, async (req: Request, res: Response) => {

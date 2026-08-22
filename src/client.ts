@@ -1,3 +1,5 @@
+const NEW_REQUEST_ENDPOINT = "/new/";
+const INIT_ENDPOINT = "/init/";
 const shortButton = document.getElementById("short-button");
 
 if (shortButton) {
@@ -14,13 +16,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function askServer(): Promise<string | undefined> {
-    const END_POINT = "/api/new";
     const payload = getPayload();
     if (!payload) {
         return;
     }
     try {
-        const serverResponse = await fetch(END_POINT, payload);
+        const serverResponse = await fetch(NEW_REQUEST_ENDPOINT, payload);
         const newLink = await serverResponse.text();
         if (newLink) {
             location.reload();
@@ -31,8 +32,7 @@ async function askServer(): Promise<string | undefined> {
 }
 
 async function getAllLinks(): Promise<void> {
-    const END_POINT = "/init/";
-    const response = await fetch(END_POINT);
+    const response = await fetch(INIT_ENDPOINT);
     if (response.ok) {
         const data = await response.json() as SessionLink[];
         data?.forEach(link => {
@@ -51,7 +51,7 @@ function addLinkToDisplay(short_link: string, long_link: string): void {
         if (isLocalHost) {
             shortLinkBuilder += ":3000";
         }
-        shortLinkBuilder += `/api/${short_link}`;
+        shortLinkBuilder += `/${short_link}`;
         li.innerHTML = `Long link: ${long_link}<br>Short link: ${shortLinkBuilder}`;
         const copyBtn = document.createElement("button")
         copyBtn.textContent = "Copy";
