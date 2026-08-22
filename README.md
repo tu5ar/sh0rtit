@@ -14,8 +14,8 @@ A simple link shortener. Paste a long URL, get a short code back, and pull up yo
 
 ## How it works
 
-- `POST /api/new/` — validates and normalizes the submitted URL, hashes it (FNV-1a) into a short code, and stores `{long_link, short_link, session_id}` in Supabase.
-- `GET /api/:id` — looks up the short code and 302-redirects to the original URL.
+- `POST /new/` — validates and normalizes the submitted URL, hashes it (FNV-1a) into a short code, and stores `{long_link, short_link, session_id}` in Supabase.
+- `GET /:id` — looks up the short code and 302-redirects to the original URL.
 - `GET /init/` — returns the current session's last 10 shortened links, used to populate the list on page load.
 
 ## Setup
@@ -33,7 +33,7 @@ A simple link shortener. Paste a long URL, get a short code back, and pull up yo
    ```
    npm run dev
    ```
-   Serves on `http://localhost:3000`.
+   Serves locally on `http://localhost:3000`.
 
 ## Scripts
 

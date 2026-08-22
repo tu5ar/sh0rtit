@@ -7,8 +7,9 @@ import { addRecord, getLongLink, initLinkPull } from "./dao.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
-const errorDir = path.join(projectRoot, "public", "error");
 const publicDir = path.join(projectRoot, "public");
+const errorDir = path.join(publicDir, "error");
+
 
 const COL_SESSION_ID = "session_id";
 const ERROR_FILE = "error.html";
