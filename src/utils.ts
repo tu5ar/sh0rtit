@@ -1,3 +1,4 @@
+//FNV_1A hash function
 export function FNV_1A(input: string): string {
     const FNV_OFFSET_BASIS = 2166136261;
     const FNV_PRIME = 16777619;
@@ -11,6 +12,7 @@ export function FNV_1A(input: string): string {
     return hash.toString(36).padStart(7, "0",).slice(-5);
 }
 
+//handle input variations
 function normaliseInput(input: string): string | void {
     const MIN_LEN = 3;
     const MAX_LEN = 248;
