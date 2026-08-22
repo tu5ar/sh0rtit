@@ -1,8 +1,8 @@
 import { type Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { validateInput, FNV_1A} from "./utils.js";
-import { addRecord, getLongLink } from "./dao.js";
+import { validateInput, FNV_1A } from "./utils.js";
+import { addRecord, getLongLink, initLinkPull } from "./dao.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,7 +14,7 @@ export function handleSignin(res: Response) {
     res.sendFile(path.join(publicDir, "index", "index.html"));
 }
 
-export async function handleNewRequest(longLink: string, sessionID: string | undefined, res: Response) {
+export async function handleNewRequest(longLink: string, sessionID: string | undefined, res: Response): Promise<void> {
     const parsedLink = validateInput(longLink);
     if (!parsedLink) {
         res.status(204).send();
@@ -29,7 +29,7 @@ export async function handleNewRequest(longLink: string, sessionID: string | und
     }
 }
 
-export async function handleRedirects(shortLink: string, res: Response) {
+export async function handleRedirects(shortLink: string, res: Response): Promise<void> {
     const longLink = await getLongLink(shortLink);
     if (typeof longLink !== "string") {
         throwError(res);
@@ -46,10 +46,18 @@ function initCookie(res: Response): string {
     const maxAge = cookieValidityDays * 24 * 60 * 60 * 1000;
     const sessionID = crypto.randomUUID();
     res.cookie("session_id", sessionID, {
-        maxAge, 
+        maxAge,
         httpOnly: true,
         secure: true,
         sameSite: "lax"
     });
     return sessionID;
+}
+
+export async function handleInitPull(sessionID: string, res: Response): Promise<void> {
+    const data = await initLinkPull(sessionID) || [];
+    if (!data) {
+        res.status(401).end();
+    }
+    res.send(data);
 }

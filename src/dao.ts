@@ -2,9 +2,13 @@ import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
-
 const INSERT_ERROR_MSG = "Supabase - Insert Error";
 const GET_ERROR_MSG = "Supabase - Get Error";
+
+interface SessionLinks {
+    long_link: string;
+    short_link: string;
+}
 
 //add record
 export async function addRecord(longLink: string, shortLink: string, sessionID: String): Promise<number> {
@@ -15,10 +19,10 @@ export async function addRecord(longLink: string, shortLink: string, sessionID: 
                 long_link: longLink,
                 short_link: shortLink,
                 session_id: sessionID
-            }, 
-            {
-                onConflict: "long_link, session_id", ignoreDuplicates: true
-            }
+            },
+                {
+                    onConflict: "long_link, session_id", ignoreDuplicates: true
+                }
             );
         return 0;
     } catch (error) {
@@ -44,5 +48,27 @@ export async function getLongLink(shortLink: string): Promise<string | number | 
     } catch (error) {
         console.log(GET_ERROR_MSG, error);
         return -1;
+    }
+}
+
+export async function initLinkPull(sessionID: string): Promise<SessionLinks[]> {
+    try {
+        const { data, error } = await supabase
+            .from("main")
+            .select("short_link, long_link")
+            .eq("session_id", sessionID)
+            .order("created_at", {
+                ascending: false
+            })
+            .limit(10);
+
+        if (error) {
+            throw error;
+        }
+        return data || [];
+
+    } catch (error) {
+        console.log(GET_ERROR_MSG, error);
+        return [];
     }
 }

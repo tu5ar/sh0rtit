@@ -2,7 +2,7 @@ import express, { type Request, type Response } from "express";
 import path from "path";
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from "url";
-import { handleNewRequest, handleRedirects, throwError } from "./server_handlers.js";
+import { handleNewRequest, handleRedirects, handleInitPull, throwError } from "./server_handlers.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,11 +28,16 @@ app.get("/api/:id", async (req: Request, res: Response) => {
     handleRedirects(shortLink, res);
 })
 
+app.get("/init/", async (req: Request, res: Response) => {
+    const sessionID = req.cookies.session_id;
+    handleInitPull(sessionID, res);
+})
+
 app.all(/(.*)/, (req: Request, res: Response) => {
     throwError(res);
 })
 
 app.listen(SERVER_PORT, () => {
-    console.log("Server Running");
+    console.log(`Server Running on Port ${SERVER_PORT}`);
 })
 
