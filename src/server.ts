@@ -1,5 +1,6 @@
 import express, { type Request, type Response } from "express";
 import path from "path";
+import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from "url";
 import { handleNewRequest, handleRedirects, handleInitPull, throwError } from "./server_handlers.js";
@@ -15,7 +16,7 @@ const REDIRECT_ENDPOINT = "/:id";
 const INIT_ENDPOINT = "/init/";
 
 const app = express();
-app.use(express.json()).use(express.static(publicDir)).use(cookieParser());
+app.use(express.json()).use(express.static(publicDir)).use(cookieParser()).use(cors());
 
 app.get("/", (req: Request, res: Response) => {
     res.sendFile(path.join(publicDir, "index", INDEX_FILE));

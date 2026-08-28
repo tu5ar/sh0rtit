@@ -53,10 +53,17 @@ function addLinkToDisplay(short_link: string, long_link: string): void {
         }
         shortLinkBuilder += `/${short_link}`;
         li.innerHTML = `Long link: ${long_link}<br>Short link: ${shortLinkBuilder}`;
-        const copyBtn = document.createElement("button")
-        copyBtn.textContent = "Copy";
+        const copyBtn = getCopyBtn(shortLinkBuilder);
+        linksList.appendChild(li);
+        linksList.appendChild(copyBtn);
+    }
+}
+
+function getCopyBtn(longLink: string): HTMLButtonElement {
+    const copyBtn = document.createElement("button");
+            copyBtn.textContent = "Copy";
         copyBtn.addEventListener("click", () => {
-            navigator.clipboard.writeText(shortLinkBuilder)
+            navigator.clipboard.writeText(longLink)
                 .then(() => {
                     copyBtn.textContent = "Copied!";
                     setTimeout(() => {
@@ -65,9 +72,7 @@ function addLinkToDisplay(short_link: string, long_link: string): void {
                 })
                 .catch(err => console.log("Failed copy err: ", err));
         });
-        linksList.appendChild(li);
-        linksList.appendChild(copyBtn);
-    }
+    return copyBtn;
 }
 
 function getUserInput(): string | null {
